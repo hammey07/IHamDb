@@ -2,6 +2,9 @@ import { use, useEffect, useState } from "react";
 import { Logo } from "./Components/Logo";
 import { Search } from "./Components/Search";
 import { NumResults } from "./Components/NumResults";
+
+const KEY = process.env.REACT_APP_API_KEY;
+
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -52,7 +55,6 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-const KEY = "fb7f62db";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
@@ -87,6 +89,7 @@ export default function App() {
       if (query.length < 3) {
         setMovies([]);
         setError("");
+
         return;
       }
       fetchMovies();
