@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Logo } from "./Components/Logo";
 import { Search } from "./Components/Search";
 import { NumResults } from "./Components/NumResults";
-
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -53,21 +52,60 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-function Main({ children }) {
-  return <main className="main">{children}</main>;
-}
+const KEY = "fb7f62db";
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
+  const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const tempQuery = "interstellar";
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setError("");
+          setIsLoading(true);
+          const res = await fetch(
+            `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`
+          );
+          const data = await res.json();
+
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching movies");
+          if (data.Response == "False") throw new Error("Movie not found");
+
+          setMovies(data.Search);
+          // console.log(data);
+        } catch (err) {
+          // console.log(err.message);
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      if (query.length < 3) {
+        setMovies([]);
+        setError("");
+        return;
+      }
+      fetchMovies();
+    },
+    [query]
+  );
 
   return (
     <>
       <NavBar>
+        <Logo />
+        <Search query={query} onSetQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error}></ErrorMessage>}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
@@ -78,14 +116,23 @@ export default function App() {
   );
 }
 
-function NavBar({ children }) {
+function Loader() {
+  return <div className="loader">To those who wait, Good things come...</div>;
+}
+function ErrorMessage({ message }) {
   return (
-    <nav className="nav-bar">
-      <Logo />
-      <Search />
-      {children}
-    </nav>
+    <p className="error">
+      <span>🚫</span>
+      {message}
+    </p>
   );
+}
+function Main({ children }) {
+  return <main className="main">{children}</main>;
+}
+
+function NavBar({ children }) {
+  return <nav className="nav-bar">{children}</nav>;
 }
 
 function Box({ children }) {
@@ -105,7 +152,7 @@ function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
-        <Movie movie={movie} />
+        <Movie key={movie?.imdbID} movie={movie} />
       ))}
     </ul>
   );
@@ -158,7 +205,7 @@ function WatchedMovieList({ watched }) {
   return (
     <ul className="list">
       {watched.map((movie) => (
-        <WatchedMovie movie={movie} />
+        <WatchedMovie key={movie?.imdbID} movie={movie} />
       ))}
     </ul>
   );
