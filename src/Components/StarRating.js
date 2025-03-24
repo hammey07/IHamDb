@@ -6,7 +6,7 @@ const containerStyle = {
   gap: "16px",
 };
 
-export default function StarRating({
+export function StarRating({
   maxRating = 5,
   color = "#fcc419",
   size = 21,
