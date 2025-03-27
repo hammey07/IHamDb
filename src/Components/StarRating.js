@@ -25,7 +25,7 @@ export function StarRating({
   };
 
   function handleRating(rating) {
-    setRating(rating);
+    setRating(Number(rating));
     onSetRating(rating);
   }
 
@@ -116,23 +116,23 @@ function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
   );
 }
 
-function TextExpander({
-  collapsedNumWords,
-  expandButtonText,
-  collapseButtonText,
-  buttonColor,
-  children,
-}) {
-  const starStyles = {
-    backgroundColor: { buttonColor },
-    expandButtonText: { expandButtonText },
-    collapseButtonText: { collapseButtonText },
-  };
+// function TextExpander({
+//   collapsedNumWords,
+//   expandButtonText,
+//   collapseButtonText,
+//   buttonColor,
+//   children,
+// }) {
+//   const starStyles = {
+//     backgroundColor: { buttonColor },
+//     expandButtonText: { expandButtonText },
+//     collapseButtonText: { collapseButtonText },
+//   };
 
-  return (
-    <div className="box">
-      {children}
-      <button style={starStyles}> {collapseButtonText} </button>
-    </div>
-  );
-}
+//   return (
+//     <div className="box">
+//       {children}
+//       <button style={starStyles}> {collapseButtonText} </button>
+//     </div>
+//   );
+// }
