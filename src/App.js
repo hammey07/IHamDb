@@ -9,8 +9,13 @@ import { useLocalStorageState } from "./useLocalStorageState";
 
 const KEY = process.env.REACT_APP_API_KEY;
 
-const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+// const average = (arr) =>
+//   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
+const average = (arr) => {
+  if (!arr || arr.length === 0) return 0;
+  return arr.reduce((acc, cur) => acc + cur, 0) / arr.length;
+};
 
 export default function App() {
   const [query, setQuery] = useState("");
