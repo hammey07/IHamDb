@@ -267,7 +267,15 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 }
 
 function WatchedSummary({ watched }) {
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+  // const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+
+  const avgImdbRating = average(
+    Array.isArray(watched)
+      ? watched
+          .map((movie) => Number(movie.imdbRating))
+          .filter((r) => !isNaN(r))
+      : []
+  );
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
 
