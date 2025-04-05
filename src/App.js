@@ -5,7 +5,7 @@ import { StarRating } from "./Components/StarRating";
 import { NumResults } from "./Components/NumResults";
 import { useMovies } from "./useMovies";
 import { useKey } from "./useKey";
-import { useLocalStorageState } from "./useLocalStorageState";
+// import { useLocalStorageState } from "./useLocalStorageState";
 
 const KEY = process.env.REACT_APP_API_KEY;
 
@@ -16,8 +16,9 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const { movies, isLoading, error } = useMovies(query);
+  const [watched, setWatched] = useState([]);
 
-  const [watched, setWatched] = useLocalStorageState([], "watched");
+  // const [watched, setWatched] = useLocalStorageState([], "watched");
 
   function handleSelectMovie(id) {
     setSelectedId(selectedId == id ? null : id);
@@ -60,7 +61,7 @@ export default function App() {
             />
           ) : (
             <>
-              {/* <WatchedSummary watched={watched} /> */}
+              <WatchedSummary watched={watched} />
               <WatchedMovieList
                 watched={watched}
                 onDeleteWatched={handleDeleteWatched}
@@ -266,35 +267,35 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   );
 }
 
-// function WatchedSummary({ watched }) {
-//   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-//   const avgUserRating = average(watched.map((movie) => movie.userRating));
-//   const avgRuntime = average(watched.map((movie) => movie.runtime));
+function WatchedSummary({ watched }) {
+  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+  const avgUserRating = average(watched.map((movie) => movie.userRating));
+  const avgRuntime = average(watched.map((movie) => movie.runtime));
 
-//   return (
-//     <div className="summary">
-//       <h2>Movies you watched</h2>
-//       <div>
-//         <p>
-//           <span>#️⃣</span>
-//           <span>{watched.length} movies</span>
-//         </p>
-//         <p>
-//           <span>⭐️</span>
-//           <span>{avgImdbRating.toFixed(1)}</span>
-//         </p>
-//         <p>
-//           <span>🌟</span>
-//           <span>{avgUserRating.toFixed(1)}</span>
-//         </p>
-//         <p>
-//           <span>⏳</span>
-//           <span>{avgRuntime.toFixed(2)} min</span>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
+  return (
+    <div className="summary">
+      <h2>Movies you watched</h2>
+      <div>
+        <p>
+          <span>#️⃣</span>
+          <span>{watched.length} movies</span>
+        </p>
+        <p>
+          <span>⭐️</span>
+          <span>{avgImdbRating.toFixed(1)}</span>
+        </p>
+        <p>
+          <span>🌟</span>
+          <span>{avgUserRating.toFixed(1)}</span>
+        </p>
+        <p>
+          <span>⏳</span>
+          <span>{avgRuntime.toFixed(2)} min</span>
+        </p>
+      </div>
+    </div>
+  );
+}
 function WatchedMovieList({ watched, onDeleteWatched }) {
   return (
     <ul className="list">
