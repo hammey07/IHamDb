@@ -17,7 +17,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const { movies, isLoading, error } = useMovies(query);
   const [watched, setWatched] = useState([]);
-
+  //commented out as it does not work with netlify
   // const [watched, setWatched] = useLocalStorageState([], "watched");
 
   function handleSelectMovie(id) {
